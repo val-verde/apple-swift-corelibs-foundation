@@ -132,7 +132,7 @@ static CFUUIDRef __CFUUIDCreateWithBytesPrimitive(CFAllocatorRef allocator, CFUU
 }
 
 #if TARGET_OS_WIN32
-#include <Rpc.h>
+#include <rpc.h>
 #endif
 
 #if DEPLOYMENT_RUNTIME_SWIFT
