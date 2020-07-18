@@ -132,7 +132,7 @@ extension String {
       if hasPrefix("~") { return true }
 #if os(Windows)
       guard let value = try? FileManager.default._fileSystemRepresentation(withPath: self, {
-          !PathIsRelativeW($0)
+          PathIsRelativeW($0) == 0
       }) else { return false }
       return value
 #else
@@ -592,7 +592,7 @@ extension NSString {
 
         guard _getFileSystemRepresentation(fsr, maxLength: max) else { return false }
         return String(decodingCString: fsr, as: UTF16.self).withCString() {
-            let chars = strnlen_s($0, max)
+            let chars = strnlen($0, max)
             guard chars < max else { return false }
             cname.assign(from: $0, count: chars + 1)
             return true
@@ -813,7 +813,7 @@ internal func _NSCreateTemporaryFile(_ filePath: String) throws -> (Int32, Strin
 internal func _NSCleanupTemporaryFile(_ auxFilePath: String, _ filePath: String) throws  {
     try FileManager.default._fileSystemRepresentation(withPath: auxFilePath, andPath: filePath, {
 #if os(Windows)
-        let res = CopyFileW($0, $1, /*bFailIfExists=*/false)
+        let res = CopyFileW($0, $1, /*bFailIfExists=*/0) != 0
         try? FileManager.default.removeItem(atPath: auxFilePath)
         if !res {
           throw _NSErrorWithWindowsError(GetLastError(), reading: false)
