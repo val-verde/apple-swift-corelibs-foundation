@@ -15,6 +15,7 @@ import Glibc
 
 // WORKAROUND_SR9811
 #if os(Windows)
+import WinSDK
 internal typealias _swift_CFThreadRef = HANDLE
 #else
 internal typealias _swift_CFThreadRef = pthread_t
@@ -117,14 +118,14 @@ open class Thread : NSObject {
 
     open class func sleep(until date: Date) {
 #if os(Windows)
-        var hTimer: HANDLE = CreateWaitableTimerW(nil, true, nil)
+        var hTimer: HANDLE = CreateWaitableTimerW(nil, 1, nil)
         if hTimer == HANDLE(bitPattern: 0) { fatalError("unable to create timer: \(GetLastError())") }
         defer { CloseHandle(hTimer) }
 
         // the timeout is in 100ns units
         var liTimeout: LARGE_INTEGER =
             LARGE_INTEGER(QuadPart: LONGLONG(date.timeIntervalSinceNow * -10_000_000))
-        if !SetWaitableTimer(hTimer, &liTimeout, 0, nil, nil, false) {
+        if SetWaitableTimer(hTimer, &liTimeout, 0, nil, nil, 0) == 0 {
           return
         }
         WaitForSingleObject(hTimer, WinSDK.INFINITE)
@@ -154,14 +155,14 @@ open class Thread : NSObject {
 
     open class func sleep(forTimeInterval interval: TimeInterval) {
 #if os(Windows)
-        var hTimer: HANDLE = CreateWaitableTimerW(nil, true, nil)
+        var hTimer: HANDLE = CreateWaitableTimerW(nil, 1, nil)
         // FIXME(compnerd) how to check that hTimer is not NULL?
         defer { CloseHandle(hTimer) }
 
         // the timeout is in 100ns units
         var liTimeout: LARGE_INTEGER =
             LARGE_INTEGER(QuadPart: LONGLONG(interval * -10_000_000))
-        if !SetWaitableTimer(hTimer, &liTimeout, 0, nil, nil, false) {
+        if SetWaitableTimer(hTimer, &liTimeout, 0, nil, nil, 0) == 0 {
           return
         }
         WaitForSingleObject(hTimer, WinSDK.INFINITE)
@@ -385,7 +386,7 @@ open class Thread : NSObject {
 #elseif os(Windows)
         let hProcess: HANDLE = GetCurrentProcess()
         SymSetOptions(DWORD(SYMOPT_UNDNAME | SYMOPT_DEFERRED_LOADS))
-        if !SymInitializeW(hProcess, nil, true) {
+        if SymInitializeW(hProcess, nil, 1) == 0 {
           return []
         }
         return backtraceAddresses { (addresses, count) in
@@ -405,7 +406,7 @@ open class Thread : NSObject {
 
               var dwDisplacement: DWORD64 = 0
               if SymFromAddr(hProcess, DWORD64(UInt(bitPattern: address)),
-                             &dwDisplacement, &pSymbolInfo.pointee) {
+                             &dwDisplacement, &pSymbolInfo.pointee) != 0 {
                 symbols.append(String(unsafeUninitializedCapacity: Int(pSymbolInfo.pointee.NameLen) + 1) {
                   strncpy($0.baseAddress, &pSymbolInfo.pointee.Name, $0.count)
                   return $0.count
