@@ -749,7 +749,7 @@ open class Process: NSObject {
         
         defer {
             for arg in argv ..< argv + args.count {
-                free(UnsafeMutableRawPointer(arg.pointee))
+                arg.pointee?.deallocate()
             }
             argv.deallocate()
         }
@@ -768,7 +768,7 @@ open class Process: NSObject {
 
         defer {
             for pair in envp ..< envp + env.count {
-                free(UnsafeMutableRawPointer(pair.pointee))
+                pair.pointee?.deallocate()
             }
             envp.deallocate()
         }
