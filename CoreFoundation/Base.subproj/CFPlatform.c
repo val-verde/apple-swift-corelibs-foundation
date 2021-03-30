@@ -1476,6 +1476,7 @@ void _CF_dispatch_once(dispatch_once_t *predicate, void (^block)(void)) {
 
 #include <stdio.h>
 
+#ifndef _FORTIFY_SOURCE
 CF_PRIVATE int asprintf(char **ret, const char *format, ...) {
     va_list args;
     size_t sz = 1024;
@@ -1498,6 +1499,7 @@ CF_PRIVATE int asprintf(char **ret, const char *format, ...) {
     *ret = NULL;
     return -1;
 }
+#endif
 
 #endif
 
