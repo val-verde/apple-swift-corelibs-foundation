@@ -448,7 +448,9 @@ CF_INLINE int popcountll(long long x) {
 
 #include <stdarg.h>
 
+#ifndef _FORTIFY_SOURCE
 CF_PRIVATE int asprintf(char **ret, const char *format, ...);
+#endif
 
 #endif
 
