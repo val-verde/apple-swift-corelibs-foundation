@@ -16,6 +16,8 @@ public var NSTimeIntervalSince1970: Double {
 }
 
 #if os(Windows)
+import WinSDK
+
 extension TimeInterval {
   init(_ ftTime: FILETIME) {
     self = Double((ftTime.dwHighDateTime << 32) | ftTime.dwLowDateTime) - NSTimeIntervalSince1970;

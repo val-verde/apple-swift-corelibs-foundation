@@ -9,6 +9,10 @@
 
 @_implementationOnly import CoreFoundation
 
+#if canImport(WinSDK)
+import WinSDK
+#endif
+
 public struct OperatingSystemVersion {
     public var majorVersion: Int
     public var minorVersion: Int
