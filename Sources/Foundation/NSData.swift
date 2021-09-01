@@ -10,6 +10,10 @@
 @_implementationOnly import CoreFoundation
 import Dispatch
 
+#if canImport(WinSDK)
+import WinSDK
+#endif
+
 extension NSData {
     public struct ReadingOptions : OptionSet {
         public let rawValue : UInt

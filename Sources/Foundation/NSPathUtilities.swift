@@ -9,6 +9,10 @@
 
 @_implementationOnly import CoreFoundation
 
+#if canImport(WinSDK)
+import WinSDK
+#endif
+
 #if os(Windows)
 let validPathSeps: [Character] = ["\\", "/"]
 #else

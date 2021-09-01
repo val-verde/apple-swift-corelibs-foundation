@@ -10,6 +10,10 @@
 
 @_implementationOnly import CoreFoundation
 
+#if canImport(WinSDK)
+import WinSDK
+#endif
+
 public typealias unichar = UInt16
 
 extension unichar {

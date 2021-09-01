@@ -25,6 +25,10 @@ import CoreFoundation
 import Glibc
 #endif
 
+#if canImport(WinSDK)
+import WinSDK
+#endif
+
 internal func __NSDataInvokeDeallocatorUnmap(_ mem: UnsafeMutableRawPointer, _ length: Int) {
 #if os(Windows)
     UnmapViewOfFile(mem)
