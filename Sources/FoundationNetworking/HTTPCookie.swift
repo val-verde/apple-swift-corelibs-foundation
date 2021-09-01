@@ -10,6 +10,7 @@
 #if os(macOS) || os(iOS) || os(watchOS) || os(tvOS)
 import SwiftFoundation
 #else
+import CoreFoundation
 import Foundation
 #endif
 
