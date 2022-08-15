@@ -243,7 +243,7 @@ open class FileHandle : NSObject {
             }
 
             let szFileSize: UInt64 = (UInt64(fiFileInfo.nFileSizeHigh) << 32) | UInt64(fiFileInfo.nFileSizeLow << 0)
-            let szMapSize: UInt64 = Swift.min(UInt64(length), szFileSize)
+            let szMapSize = SIZE_T(Swift.min(UInt64(length), szFileSize))
             let pData: UnsafeMutableRawPointer =
                 MapViewOfFile(hMapping, DWORD(FILE_MAP_READ), 0, 0, SIZE_T(szMapSize))
 
