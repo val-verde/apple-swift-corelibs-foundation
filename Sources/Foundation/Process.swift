@@ -451,7 +451,12 @@ open class Process: NSObject {
       }
 
       var value: u_long = 1
-      if ioctlsocket(first, FIONBIO, &value) == SOCKET_ERROR {
+    #if arch(arm) || arch(i386)
+      let fionbio = Int(FIONBIO)
+    #else
+      let fionbio = Int32(FIONBIO)
+    #endif
+      if ioctlsocket(first, fionbio, &value) == SOCKET_ERROR {
         closesocket(first)
         return (first: INVALID_SOCKET, second: INVALID_SOCKET)
       }
