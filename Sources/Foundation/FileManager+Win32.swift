@@ -332,7 +332,7 @@ extension FileManager {
         }
 
         let handle: HANDLE = try FileManager.default._fileSystemRepresentation(withPath: path) {
-          CreateFileW($0, GENERIC_READ,
+          CreateFileW($0, DWORD(GENERIC_READ),
                       DWORD(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE),
                       nil, DWORD(OPEN_EXISTING),
                       DWORD(FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS),
@@ -803,7 +803,7 @@ extension FileManager {
 
     internal func _contentsEqual(atPath path1: String, andPath path2: String) -> Bool {
         let path1Handle: HANDLE = (try? FileManager.default._fileSystemRepresentation(withPath: path1) {
-          CreateFileW($0, GENERIC_READ,
+          CreateFileW($0, DWORD(GENERIC_READ),
                       DWORD(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE),
                       nil, DWORD(OPEN_EXISTING),
                       DWORD(FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS),
@@ -813,7 +813,7 @@ extension FileManager {
         defer { CloseHandle(path1Handle) }
 
         let path2Handle: HANDLE = (try? FileManager.default._fileSystemRepresentation(withPath: path2) {
-          CreateFileW($0, GENERIC_READ,
+          CreateFileW($0, DWORD(GENERIC_READ),
                       DWORD(FILE_SHARE_READ | FILE_SHARE_WRITE | FILE_SHARE_DELETE),
                       nil, DWORD(OPEN_EXISTING),
                       DWORD(FILE_FLAG_OPEN_REPARSE_POINT | FILE_FLAG_BACKUP_SEMANTICS),
