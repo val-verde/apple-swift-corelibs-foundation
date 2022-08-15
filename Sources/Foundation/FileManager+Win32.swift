@@ -781,10 +781,10 @@ extension FileManager {
         statInfo.st_gid = 0
         statInfo.st_atime = info.ftLastAccessTime.time_t
         statInfo.st_ctime = info.ftCreationTime.time_t
-        statInfo.st_dev = info.dwVolumeSerialNumber
+        statInfo.st_dev = _dev_t(info.dwVolumeSerialNumber)
         // inodes have meaning on FAT/HPFS/NTFS
         statInfo.st_ino = 0
-        statInfo.st_rdev = info.dwVolumeSerialNumber
+        statInfo.st_rdev = _dev_t(info.dwVolumeSerialNumber)
 
         let isReparsePoint = info.dwFileAttributes & DWORD(FILE_ATTRIBUTE_REPARSE_POINT) != 0
         let isDir = info.dwFileAttributes & DWORD(FILE_ATTRIBUTE_DIRECTORY) != 0
@@ -803,7 +803,7 @@ extension FileManager {
         guard info.nFileSizeHigh == 0 else {
             throw _NSErrorWithErrno(EOVERFLOW, reading: true, path: path)
         }
-        statInfo.st_size = Int32(info.nFileSizeLow)
+        statInfo.st_size = _off_t(info.nFileSizeLow)
         // Uid is always 0 on Windows systems
         statInfo.st_uid = 0
         return statInfo
