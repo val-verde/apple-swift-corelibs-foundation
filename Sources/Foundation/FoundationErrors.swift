@@ -244,7 +244,7 @@ internal let _NSWindowsErrorDomain = "org.swift.Foundation.WindowsError"
 
 internal func _NSErrorWithWindowsError(_ windowsError: DWORD, reading: Bool, paths: [String]? = nil) -> NSError {
     var cocoaError : CocoaError.Code
-    switch Int32(bitPattern: windowsError) {
+    switch Int32(bitPattern: UInt32(windowsError)) {
         case ERROR_LOCK_VIOLATION: cocoaError = .fileLocking
         case ERROR_NOT_LOCKED: cocoaError = .fileLocking
         case ERROR_LOCK_FAILED: cocoaError = .fileLocking
@@ -255,7 +255,7 @@ internal func _NSErrorWithWindowsError(_ windowsError: DWORD, reading: Bool, pat
         case ERROR_LOCKED: cocoaError = .fileLocking
         default:
             if reading {
-                switch Int32(bitPattern: windowsError) {
+                switch Int32(bitPattern: UInt32(windowsError)) {
                     case ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND:
                         // On an empty path, Windows will return FILE/PATH_NOT_FOUND
                         // rather than invalid path as posix does
@@ -274,7 +274,7 @@ internal func _NSErrorWithWindowsError(_ windowsError: DWORD, reading: Bool, pat
                     default:  cocoaError = .fileReadUnknown
                 }
             } else {
-                switch Int32(bitPattern: windowsError) {
+                switch Int32(bitPattern: UInt32(windowsError)) {
                     case ERROR_FILE_NOT_FOUND, ERROR_PATH_NOT_FOUND:
                         // On an empty path, Windows will return FILE/PATH_NOT_FOUND
                         // rather than invalid path as posix does

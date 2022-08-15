@@ -642,7 +642,7 @@ open class Process: NSObject {
               process._terminationStatus = Int32(dwExitCode & 0x3FFFFFFF)
               process._terminationReason = .uncaughtSignal
           } else {
-              process._terminationStatus = Int32(bitPattern: dwExitCode)
+              process._terminationStatus = Int32(bitPattern: UInt32(dwExitCode))
               process._terminationReason = .exit
           }
 
