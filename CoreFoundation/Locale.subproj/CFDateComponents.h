@@ -19,7 +19,11 @@ CF_ASSUME_NONNULL_BEGIN
 // Must match NSDateComponentUndefined
 CF_ENUM(CFIndex) {
 #if TARGET_OS_WIN32
+#if defined(__arm__) || defined(__i386__) || defined(__i486__) || defined(__i586__) || defined(__i686__) || defined(__i786__)
+    CFDateComponentUndefined = LONG_MAX
+#else
     CFDateComponentUndefined = LLONG_MAX
+#endif
 #else
     CFDateComponentUndefined = __LONG_MAX__
 #endif
