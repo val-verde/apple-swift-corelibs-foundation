@@ -433,9 +433,15 @@ open class FileManager : NSObject {
                       fatalError("Can't set \(attribute) to \(attributeValues[attribute] as Any?)")
                     }
 
+#if arch(arm) || arch(i386)
                     let hiddenAttrs = isHidden
                         ? attrs | DWORD(FILE_ATTRIBUTE_HIDDEN)
-                        : attrs & DWORD(bitPattern: ~FILE_ATTRIBUTE_HIDDEN)
+                        : attrs & DWORD(bitPattern: Int(~FILE_ATTRIBUTE_HIDDEN))
+#else
+                    let hiddenAttrs = isHidden
+                        ? attrs | DWORD(FILE_ATTRIBUTE_HIDDEN)
+                        : attrs & DWORD(bitPattern: Int32(~FILE_ATTRIBUTE_HIDDEN))
+#endif
                     guard SetFileAttributesW(fsRep, hiddenAttrs) != 0 else {
                       throw _NSErrorWithWindowsError(GetLastError(), reading: false, paths: [path])
                     }

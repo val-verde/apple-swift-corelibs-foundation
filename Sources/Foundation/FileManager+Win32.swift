@@ -587,7 +587,11 @@ extension FileManager {
 
         if faAttributes.dwFileAttributes & DWORD(FILE_ATTRIBUTE_READONLY) == FILE_ATTRIBUTE_READONLY {
           if try !FileManager.default._fileSystemRepresentation(withPath: path, {
-            SetFileAttributesW($0, faAttributes.dwFileAttributes & DWORD(bitPattern: ~FILE_ATTRIBUTE_READONLY)) != 0
+          #if arch(arm) || arch(i386)
+            SetFileAttributesW($0, faAttributes.dwFileAttributes & DWORD(bitPattern: ~Int(FILE_ATTRIBUTE_READONLY))) != 0
+          #else
+            SetFileAttributesW($0, faAttributes.dwFileAttributes & DWORD(bitPattern: ~Int32(FILE_ATTRIBUTE_READONLY))) != 0
+          #endif
           }) {
             throw _NSErrorWithWindowsError(GetLastError(), reading: false, paths: [path])
           }
@@ -637,7 +641,11 @@ extension FileManager {
                     itemPath = "\(currentDir)\\\(file)"
                     if ffd.dwFileAttributes & DWORD(FILE_ATTRIBUTE_READONLY) == FILE_ATTRIBUTE_READONLY {
                       if try !FileManager.default._fileSystemRepresentation(withPath: itemPath, {
-                        SetFileAttributesW($0, ffd.dwFileAttributes & DWORD(bitPattern: ~FILE_ATTRIBUTE_READONLY)) != 0
+                      #if arch(arm) || arch(i386)
+                        SetFileAttributesW($0, ffd.dwFileAttributes & DWORD(bitPattern: ~Int(FILE_ATTRIBUTE_READONLY))) != 0
+                      #else
+                        SetFileAttributesW($0, ffd.dwFileAttributes & DWORD(bitPattern: ~Int32(FILE_ATTRIBUTE_READONLY))) != 0
+                      #endif
                       }) {
                         throw _NSErrorWithWindowsError(GetLastError(), reading: false, paths: [file])
                       }
