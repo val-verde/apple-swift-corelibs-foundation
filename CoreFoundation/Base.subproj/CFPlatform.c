@@ -1669,7 +1669,7 @@ _CFThreadRef _CFThreadCreate(const _CFThreadAttributes attrs, void *_Nullable (*
 #endif
 }
 
-#if TARGET_OS_WIN32
+#if TARGET_OS_WIN32 && (defined(__aarch64__) || defined(__x86_64__))
 HRESULT GetThreadDescription(
   HANDLE hThread,
   PWSTR  *ppszThreadDescription
@@ -1687,6 +1687,7 @@ CF_CROSS_PLATFORM_EXPORT int _CFThreadSetName(_CFThreadRef thread, const char *_
     }
     return EINVAL;
 #elif TARGET_OS_WIN32
+#if (defined(__aarch64__) || defined(__x86_64__))
     // Convert To UTF-16
     int szLength =
         MultiByteToWideChar(CP_UTF8, MB_ERR_INVALID_CHARS, name, -1, NULL, 0);
@@ -1703,6 +1704,7 @@ CF_CROSS_PLATFORM_EXPORT int _CFThreadSetName(_CFThreadRef thread, const char *_
 
     // Free Conversion
     free(pszThreadDescription);
+#endif
 
     return 0;
 #elif TARGET_OS_LINUX
@@ -1739,6 +1741,7 @@ CF_CROSS_PLATFORM_EXPORT int _CFThreadGetName(char *buf, int length) {
 #elif TARGET_OS_WIN32
     *buf = '\0';
 
+#if TARGET_OS_WIN32 && (defined(__aarch64__) || defined(__x86_64__))
     // Get Thread Name
     PWSTR pszThreadDescription = NULL;
     HRESULT hr = GetThreadDescription(GetCurrentThread(), &pszThreadDescription);
@@ -1761,6 +1764,7 @@ CF_CROSS_PLATFORM_EXPORT int _CFThreadGetName(char *buf, int length) {
 
     // Free Result
     LocalFree(pszThreadDescription);
+#endif
 
     return 0;
 #endif
