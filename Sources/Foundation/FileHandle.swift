@@ -596,6 +596,7 @@ open class FileHandle : NSObject {
         guard self != FileHandle._nulldeviceFileHandle else { return }
         
         #if os(Windows)
+        let ERROR_INVALID_HANDLE = DWORD(6)
         guard FlushFileBuffers(self._handle) != 0 else {
             let dwError: DWORD = GetLastError()
             // If the handle is a handle to the console output,
