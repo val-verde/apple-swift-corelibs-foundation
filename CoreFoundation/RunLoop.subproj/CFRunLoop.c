@@ -34,7 +34,7 @@
 extern void objc_terminate(void);
 
 
-#if TARGET_OS_WIN32
+#ifdef _MSC_VER
 // typeinfo.h has been removed in VS2019 16.3
 #if __has_include(<typeinfo.h>)
 #include <typeinfo.h>
