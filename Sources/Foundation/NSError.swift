@@ -1316,6 +1316,7 @@ extension POSIXError {
     /// Operation canceled.
     public static var ECANCELED: POSIXError.Code {
 #if os(Windows)
+        let ERROR_CANCELLED = 1223
         return POSIXError.Code(rawValue: Int32(ERROR_CANCELLED))!
 #else
         return .ECANCELED
