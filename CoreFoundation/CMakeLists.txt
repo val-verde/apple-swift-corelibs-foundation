@@ -491,6 +491,7 @@ if(CMAKE_SYSTEM_NAME STREQUAL Windows)
                           secur32
                           user32
                           mincore
+                          netapi32
                           pathcch)
   target_link_libraries(CFURLSessionInterface
                         PRIVATE
